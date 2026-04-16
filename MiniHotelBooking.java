@@ -20,6 +20,11 @@ public class HotelBooking {
             if (choice == 1) {
                 for (int i = 0; i < 5; i++) {
                     System.out.println("Room " + (i + 1) + ": " + (rooms[i] ? "Booked You're WELCOME" : "Available"));
+                  //  if (rooms[i] == true) {
+                 //  print "Booked You're WELCOME";
+                    //} else {
+                      //print "Available";
+                    //}
                 }
             }
 
