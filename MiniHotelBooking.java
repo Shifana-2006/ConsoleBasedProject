@@ -33,7 +33,7 @@ public class HotelBooking {
                 int r = sc.nextInt();
 
                 if (r >= 1 && r <= 5) {
-                    if (!rooms[r - 1]) {
+                    if (!rooms[r - 1]) { //index = roomNumber - 1 
                         rooms[r - 1] = true;
                         System.out.println("Room booked!");
                     } else {
