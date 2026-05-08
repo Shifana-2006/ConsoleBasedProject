@@ -1,0 +1,74 @@
+class Doctor {
+    int id;
+    String name;
+    String specialization;
+}
+
+class Patient {
+    int id;
+    String name;
+    String disease;
+    int doctorId;  // linking
+}
+public class Hospital {
+static ArrayList<Doctor> doctors = new ArrayList<>();
+static ArrayList<Patient> patients = new ArrayList<>();
+
+public static void main(String[] args) { 
+   addDoctors();
+    menu();
+
+static void addDoctors() {
+    doctors.add(new Doctor(1, "Skin Doc", "skin"));
+    doctors.add(new Doctor(2, "Heart Doc", "heart"));
+}
+
+static void menu() {
+    Scanner sc = new Scanner(System.in);
+
+    System.out.println("1. Add Patient");
+    System.out.println("2. View Patients");
+
+    int choice = sc.nextInt();
+
+    if (choice == 1) {
+        addPatient();
+    } else {
+        viewPatients();
+    }
+}
+
+
+static void addPatient() {
+    Scanner sc = new Scanner(System.in);
+
+    System.out.print("Enter ID: ");
+    int id = sc.nextInt();
+    sc.nextLine();
+
+    System.out.print("Enter Name: ");
+    String name = sc.nextLine();
+
+    System.out.print("Enter Disease: ");
+    String disease = sc.nextLine();
+
+    int doctorId = assignDoctor(disease);
+
+    patients.add(new Patient(id, name, disease, doctorId));
+}
+
+static int assignDoctor(String disease) {
+    if (disease.equals("skin")) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+static void viewPatients() {
+    for (Patient p : patients) {
+        System.out.println(p.id + " " + p.name + " " + p.doctorId);
+    }
+}
+}
+}
