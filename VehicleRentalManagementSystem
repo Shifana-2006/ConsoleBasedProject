@@ -1,0 +1,372 @@
+import  java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Date;//import java.time.LocalDate;
+
+
+public class Main{//main  //VehicleRentalManagementSystem
+
+public static void main(String[] args){
+
+RentalService service=new RentalService();
+
+System.out.println("===Welcome!!!===");
+System.out.println("=====Vehicle Rental System=====");
+
+Customer loggedIncustomer=null;
+
+while(true){
+
+System.out.println("1.Login to Use (Enter 1)");
+System.out.println("2.Add Vehicle(Enter 2)");
+System.out.println("3.Dispaly Vehicle(Enter 3)");
+System.out.println("4.Search Vehicle(Entrer 4)");
+System.out.println("5.Rent Vehicle(Enter 5)");
+System.out.println("6.Return Vehicle(Enter 6)");
+System.out.println("7.Exit");
+
+int choice=service.sc.nextInt();
+
+switch(choice){
+case 1:
+service.sc.nextLine();
+loggedIncustomer= service.authenticate();
+break;
+case 2:
+service.addVehicle();
+break;
+case 3:
+service.displayVehicle();
+break;
+case 4:
+service.sc.nextLine();
+service.searchVehicle();
+break;
+case 5:
+service.sc.nextLine();
+ if(loggedIncustomer == null){
+   System.out.println("Please login first.");
+   break;
+    }
+service.rentVehicle(loggedIncustomer);
+break;
+case 6:
+service.returnVehicle();
+break;
+case 7:
+    System.out.println("Thank you!");
+    return;
+
+default:
+    System.out.println("Invalid choice");
+    //System.out.print("Exit");
+}
+}
+}
+}
+class Vehicle{
+
+private int vehicleId;
+private String vehicleModel;
+private float vehiclePerdaycharge;
+private boolean Available=true;//Important
+
+public Vehicle(int vehicleId,String vehicleModel,float vehiclePerdaycharge){
+
+this.vehicleId=vehicleId; //Read only variable
+this.vehicleModel=vehicleModel; //mutable.
+this.vehiclePerdaycharge=vehiclePerdaycharge;
+
+}
+
+public void setvehicleId(int vehicleId){// No setter  once created no need to update this.
+    this.vehicleId=vehicleId;
+}
+
+public int getvehicleId(){
+     return vehicleId;
+}
+
+public void setvehicleModel(String vehicleModel){
+     this.vehicleModel=vehicleModel;
+}
+
+public String getvehicleModel(){
+     return vehicleModel;
+}
+
+public void setvehiclePerdaycharge(float vehiclePerdaycharge){
+       this.vehiclePerdaycharge=vehiclePerdaycharge;
+}
+
+public float getvehiclePerdaycharge(){
+      return vehiclePerdaycharge;
+}
+
+public void setAvailable(boolean Available){
+    this.Available=Available;
+}
+
+public boolean getAvailable(){
+    return Available;
+}
+
+
+}
+
+class Customer{
+
+private int customerId;
+private String customerName;
+private int customerAge;
+private String customerPhonenumber;
+
+public Customer(int customerId,String customerName,int customerAge,String customerPhonenumber){
+
+this.customerId=customerId;
+this.customerName=customerName;
+this.customerAge=customerAge;
+this.customerPhonenumber=customerPhonenumber;
+
+}
+
+public int getcustomerId(){
+  return customerId;
+}
+
+public void setcustomerName(String customerName){
+  this.customerName=customerName;
+}
+
+public String getcustomerName(){
+    return customerName;
+}
+
+public void setcustomerAge(int customerAge){
+    this.customerAge=customerAge;
+}
+
+public int getcustomerAge(){
+    return customerAge;
+}
+
+public void setcustomerPhonenumber(String customerPhonenumber){
+    this.customerPhonenumber=customerPhonenumber;
+}
+
+public String getcustomerPhonenumber(){
+  return customerPhonenumber;
+}
+
+}
+
+
+class Rent{
+
+private int rentId;
+private Date rentDate;
+private Date returnDate;
+private float totalAmount;//days*perdaycharge
+private int customerID;
+private int vehicleID;
+
+public Rent(int rentId,Date rentDate,Date returnDate,float totalAmount,int customerId,int vehicleId){
+
+this.rentId=rentId;
+this.rentDate=rentDate;
+this.returnDate=returnDate;
+this.totalAmount=totalAmount;
+this.customerID=customerId;
+this.vehicleID=vehicleId;
+
+}
+
+public int getrentId(){
+  return  rentId;
+}
+
+public void setrentDate(Date rentDate){
+    this.rentDate=rentDate;
+}
+
+public Date getrentDate(){
+   return rentDate;
+}
+
+public void setreturnDate(Date returnDate){
+    this.returnDate=returnDate;
+}
+
+public Date getreturnDate(){
+   return returnDate;
+}
+
+public void settotalAmount(float totalAmount){
+   this.totalAmount=totalAmount;
+}
+
+public float gettotalAmount(){
+  return totalAmount;
+}
+
+}
+
+class RentalService{
+
+ArrayList<Vehicle> vehicles=new ArrayList<>();
+ArrayList<Customer> customers=new ArrayList<>();
+ArrayList<Rent> rents=new ArrayList<>();
+
+
+Scanner sc=new Scanner(System.in);
+
+public Customer authenticate(){
+
+System.out.print("Enter Phone Number: ");
+String customerPhonenumber=sc.nextLine();
+//verify phone num
+for(Customer c: customers){
+if(customerPhonenumber.equals(c.getcustomerPhonenumber())){//c1,c2..
+ System.out.println("Login Successfully");
+ return c;//if found !! then exit from the whole method not loop
+}
+}
+System.out.println("Invalid Login.Pls Enter Correct Num");
+return null;
+
+}
+
+public void addVehicle(){
+
+System.out.println("=====Add Vehicles=====");
+System.out.print("Enter Vehicle Id: ");
+int vehicleId=sc.nextInt();
+for (Vehicle v : vehicles) {
+if (vehicleId==v.getvehicleId()) {
+     System.out.println("Vehicle ID already exists!");
+     return;
+     }
+ }
+sc.nextLine();//To clear the bug(buffered)
+System.out.print("Enter Vehicle Model: ");
+String vehicleModel=sc.nextLine();
+System.out.print("Enter Per day Charge: ");
+float vehiclePerdaycharge=sc.nextFloat();
+
+//vehicle obj creation
+Vehicle v=new Vehicle(vehicleId,vehicleModel,vehiclePerdaycharge);
+//Add into ArrayList
+vehicles.add(v);
+System.out.println("Vehicle Added Succesfully");
+
+}
+
+public void displayVehicle(){
+
+System.out.println("=====Display Vehicles=====");
+if(vehicles.isEmpty()){
+System.out.println("Vehicles not available");
+}
+else{
+for(Vehicle v:vehicles){
+System.out.println("Vehicle Id: " + v.getvehicleId());
+System.out.println("Vehicle Model: " + v.getvehicleModel());
+System.out.println("Per Day Charge: " + v.getvehiclePerdaycharge());
+System.out.println("Available: " + v.getAvailable());
+
+}
+}
+
+}
+
+//Admin search veh by ID,As a Customer need to search by model.
+//Search by ID → return use(coz ID unique)
+//Search by Model → return Dont use(coz different id of veh has same model)
+
+public void searchVehicle(){
+
+System.out.println("=====Search Vehicle=====");
+System.out.println("Enter Vehicle Model:");
+String vehicleModel=sc.nextLine();
+boolean found=false;
+for(Vehicle v:vehicles){
+if(vehicleModel.equalsIgnoreCase(v.getvehicleModel())){
+found=true;
+System.out.println("Vehicle Id: " + v.getvehicleId());
+System.out.println("Vehicle Model: " + v.getvehicleModel());
+System.out.println("Per Day Charge: " + v.getvehiclePerdaycharge());
+System.out.println("Available: " + v.getAvailable());
+}
+}
+if(!found){
+System.out.println("Vehicle not found");
+}
+
+}
+
+
+public void rentVehicle(Customer c){
+
+System.out.println("=====Rent Vehicle=====");
+System.out.println("Enter Vehicle Model:");
+String vehicleModel=sc.nextLine();
+boolean found=false;
+for(Vehicle v:vehicles){
+if(vehicleModel.equalsIgnoreCase(v.getvehicleModel())){
+found=true;
+System.out.println("Take rent");
+System.out.println("Vehicle Id: " + v.getvehicleId());
+System.out.println("Vehicle Model: " + v.getvehicleModel());
+System.out.println("Per Day Charge: " + v.getvehiclePerdaycharge());
+System.out.println("Available: "+v.getAvailable());
+
+System.out.println("Enter Vehicle ID you want to rent: ");
+int vehicleId=sc.nextInt();
+
+if(vehicleId == v.getvehicleId()) {
+
+if(v.getAvailable()){
+System.out.println("Enter how many days do u want to rent: ");
+int days=sc.nextInt();
+float totalAmount=days*v.getvehiclePerdaycharge();
+System.out.println("Total Amount: "+totalAmount);
+
+int rentId = rents.size() + 1;
+Date rentDate = new Date();
+Date returnDate = null;
+//add
+Rent r=new Rent(rentId,rentDate,returnDate,totalAmount,c.getcustomerId(),v.getvehicleId());
+rents.add(r);
+//update 
+v.setAvailable(false);
+}
+else{
+System.out.println("Vehicle is already rented");
+}
+}
+}
+}
+if(!found){
+System.out.println("Vehicle not found");
+}
+}
+
+
+public void returnVehicle(){
+
+System.out.println("=====Return Vehicle=====");
+System.out.println("Enter Vehicle Id to return: ");
+int vehicleId=sc.nextInt();
+for(Vehicle v : vehicles){
+if(vehicleId==v.getvehicleId()){
+if(!v.getAvailable()){
+System.out.println("Vehicle Model: "+v.getvehicleModel());
+System.out.println("Vehicle Returned Successfully");
+
+v.setAvailable(true);
+
+}
+}
+}
+
+}
+}
